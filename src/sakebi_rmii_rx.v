@@ -18,6 +18,8 @@ module sakebi_rmii_rx #(
   reg                    r_crs_dv;
   reg [1:0]              r_rxd;
   reg [NIBBLE_WIDTH-1:0] r_nibble;
+  reg [DATA_WIDTH-1:0]   r_byte_fifo;
+  reg [DATA_WIDTH-1:0]   r_byte_cnt;
   reg [DATA_WIDTH-1:0]   r_byte;
   reg [3:0]              r_valid_check;
 
@@ -58,6 +60,7 @@ module sakebi_rmii_rx #(
       RMII_SFD : begin
         if(r_rxd == 2'b11) begin    // sfd
           r_rmii_state  <= RMII_DATA;
+          r_byte_cnt    <= 8'h0;
         end else if(r_rxd == 2'b01) begin
           r_rmii_state  <= r_rmii_state;
         end else begin
@@ -67,10 +70,21 @@ module sakebi_rmii_rx #(
       // accumlate data and send byte to next module
       // now r_rxd has valid data
       RMII_DATA : begin
-        r_byte          <= {r_byte[5:0], r_rxd};
-        if() begin
-
+        if(r_crs_dv == 1'b1) begin
+          r_byte_fifo <= {r_byte_fifo[5:0], r_rxd};
+          if(r_byte_cnt == 8'h04) begin
+            r_byte_cnt    <= 8'h00;
+            o_axis_tdata  <= r_byte_fifo;
+            o_axis_tvalid <= 1'b1;
+          end else begin
+            r_byte_cnt    <= r_byte_cnt + 8'h01;
+            o_axis_tdata  <= o_axis_tdata;
+            o_axis_tvalid <= o_axis_tvalid;
+          end
+          r_rmii_state  <= RMII_IDLE;
         end else begin
+          o_axis_tvalid <= 1'b0;
+          r_rmii_state  <= r_rmii_state;
         end
       end
       // error
@@ -79,6 +93,9 @@ module sakebi_rmii_rx #(
       default       : begin
       end
     endcase
+  end
+
+  always @(posedge i_axis_ACLK) begin
   end
 
 endmodule
