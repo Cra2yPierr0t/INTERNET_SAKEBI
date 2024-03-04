@@ -53,7 +53,7 @@ module sakebi_async_fifo #(
       r_rd_gray[1]  <= 0;
     end else begin
       r_rd_gray[0]  <= w_rd_gray;
-      r_rd_gray[1]  <= r_rd_gray[1];
+      r_rd_gray[1]  <= r_rd_gray[0];
     end
   end
 

@@ -1,5 +1,5 @@
 module sakebi_bin2gray #(
-  parameter WIDTH = 4
+  parameter WIDTH = 2
 )(
   input  wire [WIDTH-1:0] i_bin,
   output wire [WIDTH-1:0] o_gray
