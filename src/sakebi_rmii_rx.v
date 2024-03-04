@@ -116,7 +116,9 @@ module sakebi_rmii_rx #(
   reg                   r_afifo_rd_en;
   wire [DATA_WIDTH-1:0] w_afifo_rd_data;
 
-  sakebi_async_fifo afifo(
+  sakebi_async_fifo #(
+    .DEPTH  (8  )
+  ) afifo (
     // WRITE
     .i_wr_clk   (i_rmii_REF_CLK     ),
     .i_wr_rstn  (1'b1               ),

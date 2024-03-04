@@ -45,21 +45,34 @@ module sakebi_rmii_rx_tb;
     #10
     r_rmii_RXD      = 2'b01;
     #20
+    r_rmii_RXD      = 2'b11; // SFD
+    #2
+    r_rmii_RXD      = 2'b10;
+    #8
     r_rmii_RXD      = 2'b11;
-    #2
+    #8
+    r_rmii_RXD      = 2'b01;
+    #8
+    r_rmii_RXD      = 2'b00;
+    #8
     r_rmii_RXD      = 2'b10;
-    #2
+    #8
     r_rmii_RXD      = 2'b11;
-    #10
+    #8
     r_rmii_RXD      = 2'b01;
-    #2
+    #8
+    r_rmii_RXD      = 2'b00;
+    #8
+    r_rmii_RXD      = 2'b01;
+    #8
+    r_rmii_RXD      = 2'b11;
+    #8
     r_rmii_RXD      = 2'b10;
-    #2
-    r_rmii_RXD      = 2'b10;
-    #2
+    #8
+    r_rmii_RXD      = 2'b00;
+    #8
     r_rmii_RXD      = 2'b01;
-    #6
-    r_rmii_RXD      = 2'b01;
+    #8
     r_rmii_CRS_DV   = 1'b0;
     #2
     r_rmii_RXD      = 2'b00;

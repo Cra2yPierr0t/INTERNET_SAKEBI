@@ -42,7 +42,9 @@ module sakebi_async_fifo #(
     end
   end
 
-  sakebi_bin2gray wr_bin2gray(
+  sakebi_bin2gray #(
+    .WIDTH  (ADDR_WIDTH )
+  ) wr_bin2gray (
     .i_bin  (r_wr_addr  ),
     .o_gray (w_wr_gray  )
   );
@@ -57,7 +59,9 @@ module sakebi_async_fifo #(
     end
   end
 
-  sakebi_gray2bin rd_gray2bin(
+  sakebi_gray2bin #(
+    .WIDTH  (ADDR_WIDTH )
+  ) rd_gray2bin(
     .i_gray (r_rd_gray[1]),
     .o_bin  (w_rd_addr   )
   );
@@ -85,7 +89,9 @@ module sakebi_async_fifo #(
     end
   end
 
-  sakebi_bin2gray rd_bin2gray(
+  sakebi_bin2gray #(
+    .WIDTH  (ADDR_WIDTH )
+  ) rd_bin2gray(
     .i_bin  (r_rd_addr  ),
     .o_gray (w_rd_gray  )
   );
@@ -100,7 +106,9 @@ module sakebi_async_fifo #(
     end
   end
 
-  sakebi_gray2bin wr_gray2bin(
+  sakebi_gray2bin #(
+    .WIDTH  (ADDR_WIDTH )
+  ) wr_gray2bin(
     .i_gray (r_wr_gray[1]),
     .o_bin  (w_wr_addr   )
   );
