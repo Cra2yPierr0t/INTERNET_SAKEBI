@@ -17,7 +17,6 @@ module sakebi_rmii_rx #(
   reg [1:0]             r_rxd;
   reg [DATA_WIDTH-1:0]  r_byte_fifo;
   reg [DATA_WIDTH-1:0]  r_byte_cnt;
-  reg [DATA_WIDTH-1:0]  r_byte; 
 
   reg                   r_afifo_wr_en;
   reg [DATA_WIDTH-1:0]  r_afifo_wr_data;
@@ -37,15 +36,19 @@ module sakebi_rmii_rx #(
 
   always @(posedge i_rmii_REF_CLK) begin
     if(~i_axis_ARESETn) begin
-      r_rmii_state  <= RMII_IDLE;
-      r_byte_fifo   <= 8'h0;
-      r_byte_cnt    <= 8'h0;
+      r_rmii_state      <= RMII_IDLE;
+      r_byte_fifo       <= 8'h0;
+      r_byte_cnt        <= 8'h0;
+      r_afifo_wr_data   <= 8'h0;
+      r_afifo_wr_en     <= 1'b0;
     end else begin
       case(r_rmii_state) 
         // wait for carrier
         RMII_IDLE     : begin
-          r_byte_fifo   <= 8'h0;
-          r_byte_cnt    <= 8'h0;
+          r_byte_fifo       <= 8'h0;
+          r_byte_cnt        <= 8'h0;
+          r_afifo_wr_data   <= 8'h0;
+          r_afifo_wr_en     <= 1'b0;
           if(r_crs_dv == 1'b1) begin
             r_rmii_state  <= RMII_PREAMBLE;
           end else begin
@@ -89,7 +92,8 @@ module sakebi_rmii_rx #(
             end
             r_rmii_state    <= r_rmii_state;
           end else begin
-            r_afifo_wr_en   <= 1'b0;
+            r_afifo_wr_data <= r_byte_fifo;
+            r_afifo_wr_en   <= 1'b1;
             r_rmii_state    <= RMII_IDLE;
           end
         end
@@ -133,7 +137,12 @@ module sakebi_rmii_rx #(
     if(~i_axis_ARESETn) begin
       r_afifo_rd_valid  <= 1'b0;
     end else begin
-      r_afifo_rd_valid  <= r_afifo_rd_en;
+      // when rd_ready, if assert rd_en then we got valid data
+      if(w_afifo_rd_ready) begin
+        r_afifo_rd_valid    <= r_afifo_rd_en;
+      end else begin
+        r_afifo_rd_valid    <= 1'b0;
+      end
     end
   end
 
@@ -149,7 +158,6 @@ module sakebi_rmii_rx #(
         r_afifo_rd_en   <= 1'b0;
       end
     end
-    
     // send data to AXIS
     if(~i_axis_ARESETn) begin
       o_axis_TVALID <= 1'b0;
