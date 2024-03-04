@@ -35,7 +35,7 @@ module sakebi_rmii_rx #(
   localparam RMII_ERROR     = 4'hf;
 
   always @(posedge i_rmii_REF_CLK) begin
-    if(~i_axis_ARESETn) begin
+    if(!i_axis_ARESETn) begin
       r_rmii_state      <= RMII_IDLE;
       r_byte_fifo       <= 8'h0;
       r_byte_cnt        <= 8'h0;
@@ -136,7 +136,7 @@ module sakebi_rmii_rx #(
   // valid signal extension for async fifo
   reg r_afifo_rd_valid;
   always @(posedge i_axis_ACLK, negedge i_axis_ARESETn) begin
-    if(~i_axis_ARESETn) begin
+    if(!i_axis_ARESETn) begin
       r_afifo_rd_valid  <= 1'b0;
     end else begin
       // when rd_ready, if assert rd_en then we got valid data
@@ -151,7 +151,7 @@ module sakebi_rmii_rx #(
   // AXIS
   always @(posedge i_axis_ACLK, negedge i_axis_ARESETn) begin
     // read data from afifo
-    if(~i_axis_ARESETn) begin
+    if(!i_axis_ARESETn) begin
       r_afifo_rd_en <= 1'b0;
     end else begin
       if(w_afifo_rd_ready) begin
@@ -161,7 +161,7 @@ module sakebi_rmii_rx #(
       end
     end
     // send data to AXIS
-    if(~i_axis_ARESETn) begin
+    if(!i_axis_ARESETn) begin
       o_axis_TVALID <= 1'b0;
       o_axis_TDATA  <= {DATA_WIDTH{1'b0}};
     end else begin

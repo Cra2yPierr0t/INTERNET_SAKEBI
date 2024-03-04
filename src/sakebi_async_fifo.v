@@ -33,7 +33,7 @@ module sakebi_async_fifo #(
     if(!i_wr_rstn) begin
       r_wr_addr <= 0;
     end else begin
-      if(i_wr_en && ~w_full) begin
+      if(i_wr_en && !w_full) begin
         r_wr_addr           <= r_wr_addr + 1;
         r_ram[r_wr_addr]    <= i_wr_data;
       end else begin
@@ -50,7 +50,7 @@ module sakebi_async_fifo #(
   );
 
   always @(posedge i_wr_clk, negedge i_wr_rstn) begin
-    if(~i_wr_rstn) begin
+    if(!i_wr_rstn) begin
       r_rd_gray[0]  <= 0;
       r_rd_gray[1]  <= 0;
     end else begin
@@ -80,7 +80,7 @@ module sakebi_async_fifo #(
     if(!i_rd_rstn) begin
       r_rd_addr <= 0;
     end else begin
-      if(i_rd_en && ~w_empty) begin
+      if(i_rd_en && !w_empty) begin
         r_rd_addr   <= r_rd_addr + 1;
         o_rd_data   <= r_ram[r_rd_addr];
       end else begin
@@ -97,7 +97,7 @@ module sakebi_async_fifo #(
   );
 
   always @(posedge i_rd_clk, negedge i_rd_rstn) begin
-    if(~i_rd_rstn) begin
+    if(!i_rd_rstn) begin
       r_wr_gray[0]  <= 0;
       r_wr_gray[1]  <= 0;
     end else begin
