@@ -57,9 +57,9 @@ module sakebi_rmii_rx #(
         end
         // wait for preamble
         RMII_PREAMBLE : begin
-          if(r_rxd == 2'b01) begin
+          if(r_rxd == 2'b10) begin
             r_rmii_state  <= RMII_SFD;
-          end else if(r_rxd == 2'b10) begin   // bad ssd
+          end else if(r_rxd == 2'b01) begin   // bad ssd
             r_rmii_state  <= RMII_ERROR;
           end else begin
             r_rmii_state  <= r_rmii_state;
