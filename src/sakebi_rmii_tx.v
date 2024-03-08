@@ -9,7 +9,7 @@ module sakebi_rmii_tx #(
   input wire                    i_axis_ACLK,
   input wire                    i_axis_ARESETn,
   input wire                    i_axis_TVALID,
-  output reg                    o_axis_TREADY,
+  output reg                    o_axis_TREADY,  // TODO: implement
   input wire [DATA_WIDTH-1:0]   i_axis_TDATA
 );
 
@@ -51,7 +51,7 @@ module sakebi_rmii_tx #(
   wire [DATA_WIDTH-1:0] w_afifo_rd_data;
 
   sakebi_async_fifo #(
-    .DEPTH  (8  )
+    .DEPTH  (16 )
   ) afifo (
     // WRITE
     .i_wr_clk   (i_axis_ACLK        ),
@@ -81,6 +81,10 @@ module sakebi_rmii_tx #(
   // RMII TX
   always @(posedge i_rmii_REF_CLK, negedge i_axis_ARESETn) begin
     if(!i_axis_ARESETn) begin
+      o_rmii_TX_EN  <= 1'b0;
+      o_rmii_TXD    <= 2'b00;
+      r_afifo_rd_en <= 1'b0;
+      r_rmii_state  <= RMII_IDLE;
     end else begin
       case(r_rmii_state)
         RMII_IDLE       : begin
@@ -121,27 +125,32 @@ module sakebi_rmii_tx #(
             r_rmii_fifo     <= {2'b00, r_rmii_fifo[7:2]};
           end else if(r_rmii_data_cnt == 8'h00) begin
             r_afifo_rd_en   <= 1'b0;
+            r_rmii_state    <= r_rmii_state;
             r_rmii_data_cnt <= r_rmii_data_cnt + 8'h01;
             o_rmii_TXD      <= w_afifo_rd_data[1:0];
             r_rmii_fifo     <= {2'b00, w_afifo_rd_data[7:2]};
           end else if(r_rmii_data_cnt == 8'h03) begin
             r_afifo_rd_en   <= 1'b0;
+            r_rmii_state    <= r_rmii_state;
             r_rmii_data_cnt <= 8'h00;
             o_rmii_TXD      <= r_rmii_fifo[1:0];
             r_rmii_fifo     <= {2'b00, r_rmii_fifo[7:2]};
           end else if(r_rmii_data_cnt == 8'h02) begin
             r_afifo_rd_en   <= w_afifo_rd_ready;
+            r_rmii_state    <= r_rmii_state;
             r_rmii_data_cnt <= r_rmii_data_cnt + 8'h01;
             o_rmii_TXD      <= r_rmii_fifo[1:0];
             r_rmii_fifo     <= {2'b00, r_rmii_fifo[7:2]};
           end else begin
             r_afifo_rd_en   <= 1'b0;
+            r_rmii_state    <= r_rmii_state;
             r_rmii_data_cnt <= r_rmii_data_cnt + 8'h01;
             o_rmii_TXD      <= r_rmii_fifo[1:0];
             r_rmii_fifo     <= {2'b00, r_rmii_fifo[7:2]};
           end
         end
         default         : begin
+          r_rmii_state  <= RMII_IDLE;
         end
       endcase
     end

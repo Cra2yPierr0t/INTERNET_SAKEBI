@@ -52,6 +52,48 @@ module sakebi_rmii_tx_tb;
     r_axis_TVALID   = 1'b1;
     r_axis_TDATA    = 8'h66;
     #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h77;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h88;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h99;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'haa;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'hbb;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'hcc;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'hdd;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'hee;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'hff;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h10;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h11;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h12;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h13;
+    #8
+    r_axis_TVALID   = 1'b1;
+    r_axis_TDATA    = 8'h14;
+    #8
     r_axis_TVALID   = 1'b0;
     #8
     #100

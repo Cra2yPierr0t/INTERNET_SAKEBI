@@ -9,7 +9,7 @@ module sakebi_rmii_rx #(
   input  wire                   i_axis_ACLK,
   input  wire                   i_axis_ARESETn,
   output reg                    o_axis_TVALID,
-  input  wire                   i_axis_TREADY,
+  input  wire                   i_axis_TREADY,  // TODO: implement
   output reg  [DATA_WIDTH-1:0]  o_axis_TDATA
 );
 
