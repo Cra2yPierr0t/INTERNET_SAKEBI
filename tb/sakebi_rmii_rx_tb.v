@@ -53,7 +53,7 @@ module sakebi_rmii_rx_tb;
     #8
     r_rmii_RXD      = 2'b01;
     #8
-    r_rmii_RXD      = 2'b00;
+    r_rmii_RXD      = 2'b10;
     #8
     r_rmii_RXD      = 2'b10;
     #8
@@ -61,7 +61,7 @@ module sakebi_rmii_rx_tb;
     #8
     r_rmii_RXD      = 2'b01;
     #8
-    r_rmii_RXD      = 2'b00;
+    r_rmii_RXD      = 2'b10;
     #8
     r_rmii_RXD      = 2'b01;
     #8
@@ -69,13 +69,24 @@ module sakebi_rmii_rx_tb;
     #8
     r_rmii_RXD      = 2'b10;
     #8
-    r_rmii_RXD      = 2'b00;
+    r_rmii_RXD      = 2'b10;
     #8
     r_rmii_RXD      = 2'b01;
     #8
+    r_rmii_RXD      = 2'b11;
     r_rmii_CRS_DV   = 1'b0;
     #2
+    r_rmii_RXD      = 2'b01;
+    r_rmii_CRS_DV   = 1'b1;
+    #2
+    r_rmii_RXD      = 2'b10;
+    r_rmii_CRS_DV   = 1'b0;
+    #2
+    r_rmii_RXD      = 2'b11;
+    r_rmii_CRS_DV   = 1'b1;
+    #2
     r_rmii_RXD      = 2'b00;
+    r_rmii_CRS_DV   = 1'b0;
     #100
     $finish;
   end

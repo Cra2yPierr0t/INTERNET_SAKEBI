@@ -15,6 +15,7 @@ module sakebi_rmii_rx #(
 
   reg                   r_crs_dv;
   reg [1:0]             r_rxd;
+  reg [3:0]             r_crs_dv_fifo;
   reg [DATA_WIDTH-1:0]  r_byte_fifo;
   reg [DATA_WIDTH-1:0]  r_byte_cnt;
 
@@ -38,6 +39,7 @@ module sakebi_rmii_rx #(
     if(!i_axis_ARESETn) begin
       r_rmii_state      <= RMII_IDLE;
       r_byte_fifo       <= 8'h0;
+      r_crs_dv_fifo     <= 4'h0;
       r_byte_cnt        <= 8'h0;
       r_afifo_wr_data   <= 8'h0;
       r_afifo_wr_en     <= 1'b0;
@@ -47,6 +49,7 @@ module sakebi_rmii_rx #(
         RMII_IDLE     : begin
           r_byte_fifo       <= 8'h0;
           r_byte_cnt        <= 8'h0;
+          r_crs_dv_fifo     <= 4'h0;
           r_afifo_wr_data   <= 8'h0;
           r_afifo_wr_en     <= 1'b0;
           if(r_crs_dv == 1'b1) begin
@@ -57,9 +60,9 @@ module sakebi_rmii_rx #(
         end
         // wait for preamble
         RMII_PREAMBLE : begin
-          if(r_rxd == 2'b10) begin
+          if(r_rxd == 2'b01) begin
             r_rmii_state  <= RMII_SFD;
-          end else if(r_rxd == 2'b01) begin   // bad ssd
+          end else if(r_rxd == 2'b10) begin   // bad ssd
             r_rmii_state  <= RMII_ERROR;
           end else begin
             r_rmii_state  <= r_rmii_state;
@@ -79,22 +82,23 @@ module sakebi_rmii_rx #(
         // accumlate data and send byte to next module
         // now r_rxd has valid data
         RMII_DATA : begin
-          if(r_crs_dv == 1'b1) begin
-            r_byte_fifo     <= {r_rxd, r_byte_fifo[7:2]};
-            if(r_byte_cnt == 8'h04) begin
-              r_byte_cnt        <= 8'h01;
-              r_afifo_wr_data   <= r_byte_fifo;
-              r_afifo_wr_en     <= 1'b1;
-            end else begin
-              r_byte_cnt        <= r_byte_cnt + 8'h01;
-              r_afifo_wr_data   <= r_afifo_wr_data;
-              r_afifo_wr_en     <= 1'b0;
-            end
-            r_rmii_state    <= r_rmii_state;
-          end else begin
+          r_byte_fifo   <= {r_rxd, r_byte_fifo[7:2]};
+          r_crs_dv_fifo <= {r_crs_dv, r_crs_dv_fifo[3:1]};
+          if(r_byte_cnt == 8'h04) begin
+            r_byte_cnt      <= 8'h01;
             r_afifo_wr_data <= r_byte_fifo;
-            r_afifo_wr_en   <= 1'b1;
-            r_rmii_state    <= RMII_IDLE;
+            if(r_crs_dv_fifo[3] == 1'b1) begin
+              r_afifo_wr_en <= 1'b1;
+              r_rmii_state  <= r_rmii_state;
+            end else begin
+              r_afifo_wr_en <= 1'b0;
+              r_rmii_state  <= RMII_IDLE;
+            end
+          end else begin
+            r_byte_cnt      <= r_byte_cnt + 8'h01;
+            r_afifo_wr_data <= r_afifo_wr_data;
+            r_afifo_wr_en   <= 1'b0;
+            r_rmii_state    <= r_rmii_state;
           end
         end
         // error
