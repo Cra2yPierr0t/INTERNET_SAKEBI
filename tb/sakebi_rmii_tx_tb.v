@@ -7,7 +7,6 @@ module sakebi_rmii_tx_tb;
   reg           r_axis_ACLK     = 1'b0;
   reg           r_axis_ARESETn  = 1'b1;
   reg           r_axis_TVALID;
-  wire          w_axis_TREADY;
   reg  [7:0]    r_axis_TDATA;
 
   always #1 begin
@@ -32,7 +31,6 @@ module sakebi_rmii_tx_tb;
     .i_axis_ACLK    (r_axis_ACLK    ),
     .i_axis_ARESETn (r_axis_ARESETn ),
     .i_axis_TVALID  (r_axis_TVALID  ),
-    .o_axis_TREADY  (w_axis_TREADY  ),
     .i_axis_TDATA   (r_axis_TDATA   )
   );
 
