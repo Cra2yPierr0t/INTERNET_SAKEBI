@@ -45,7 +45,7 @@ module sakebi_ethernet_frame_rx #(
   always @(posedge i_axis_ACLK, negedge i_axis_ARESETn) begin
     if(!i_axis_ARESETn) begin
       r_tvalid  <= 1'b0;
-      r_tdata   <= {DATA_WIDHT{1'b0}};
+      r_tdata   <= {DATA_WIDTH{1'b0}};
     end else begin
       r_tvalid  <= i_axis_TVALID;
       r_tdata   <= i_axis_TDATA;
@@ -73,7 +73,7 @@ module sakebi_ethernet_frame_rx #(
           end
         end
         ETHER_MAC_DST   : begin
-          if(r_mac_cnt == 8'h04) begin
+          if(r_mac_cnt == 8'h05) begin
             r_mac_cnt       <= 8'h00;
             r_ether_state   <= ETHER_MAC_SRC;
           end else begin
@@ -109,9 +109,9 @@ module sakebi_ethernet_frame_rx #(
           o_ethertype       <= r_ethertype;
           o_axis_TDATA      <= r_tdata;
           if(r_tvalid == 1'b0) begin
-            e_ether_status  <= ETHER_IDLE;
+            r_ether_state   <= ETHER_IDLE;
           end else begin
-            r_ether_state   <= r_eter_status;
+            r_ether_state   <= r_ether_state;
           end
         end
         default         : begin
