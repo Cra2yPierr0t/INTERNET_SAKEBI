@@ -65,7 +65,7 @@ module sakebi_ethernet_frame_rx #(
           if(r_tvalid) begin
             r_ether_state   <= ETHER_MAC_DST;
             r_mac_cnt       <= r_mac_cnt + 8'h01;
-            r_dst_mac_addr  <= {r_tdata, r_dst_mac_addr[MAC_ADDR_WIDTH-1:8]};
+            r_dst_mac_addr  <= {r_dst_mac_addr[MAC_ADDR_WIDTH-9:0], r_tdata};
           end else begin
             r_ether_state   <= r_ether_state;
             r_mac_cnt       <= 8'h00;
@@ -80,7 +80,7 @@ module sakebi_ethernet_frame_rx #(
             r_mac_cnt       <= r_mac_cnt + 8'h01;
             r_ether_state   <= r_ether_state;
           end
-          r_dst_mac_addr    <= {r_tdata, r_dst_mac_addr[MAC_ADDR_WIDTH-1:8]};
+          r_dst_mac_addr    <= {r_dst_mac_addr[MAC_ADDR_WIDTH-9:0], r_tdata};
         end
         ETHER_MAC_SRC   : begin
           if(r_mac_cnt == 8'h05) begin
@@ -90,7 +90,7 @@ module sakebi_ethernet_frame_rx #(
             r_mac_cnt       <= r_mac_cnt + 8'h01;
             r_ether_state   <= r_ether_state;
           end
-          r_src_mac_addr    <= {r_tdata, r_src_mac_addr[MAC_ADDR_WIDTH-1:8]};
+          r_src_mac_addr    <= {r_src_mac_addr[MAC_ADDR_WIDTH-9:0], r_tdata};
         end
         ETHER_ETHERTYPE : begin
           if(r_ethertype_cnt == 8'h01) begin
@@ -100,7 +100,7 @@ module sakebi_ethernet_frame_rx #(
             r_ethertype_cnt <= r_ethertype_cnt + 8'h01;
             r_ether_state   <= r_ether_state;
           end
-          r_ethertype   <= {r_tdata, r_ethertype[ETHERTYPE_WIDTH-1:8]};
+          r_ethertype   <= {r_ethertype[ETHERTYPE_WIDTH-9:0], r_tdata};
         end
         ETHER_PAYLOAD   : begin
           o_axis_TVALID     <= r_tvalid;
