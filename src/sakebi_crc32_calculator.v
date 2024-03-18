@@ -7,7 +7,7 @@ module sakebi_crc32_calculator #(
 ) (
   input wire    i_clk,
   input wire    [INPUT_WIDTH-1:0]   i_data,
-  output reg    [OUTPUT_WIDTH-1:0]  o_data
+  output wire   [OUTPUT_WIDTH-1:0]  o_data
 );
 
 /* verilator lint_off UNOPTFLAT */
@@ -25,8 +25,6 @@ module sakebi_crc32_calculator #(
     end
   endgenerate
 
-  always @(posedge i_clk) begin
-    o_data  <= w_inter_crc[DATA_WIDTH-1][OUTPUT_WIDTH-1:0];
-  end
+  assign o_data =  w_inter_crc[DATA_WIDTH-1][OUTPUT_WIDTH-1:0];
 
 endmodule
