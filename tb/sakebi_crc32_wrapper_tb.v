@@ -6,6 +6,7 @@ module sakebi_crc32_wrapper_tb;
   reg                   i_axis_ARESETn  = 1'b1;
 
   reg                   i_axis_TVALID   = 1'b0;
+  wire                  o_axis_TREADY;
   reg  [DATA_WIDTH-1:0] i_axis_TDATA;
 
   wire                      o_axis_TVALID;
@@ -19,6 +20,7 @@ module sakebi_crc32_wrapper_tb;
     .i_axis_ACLK    (i_axis_ACLK    ),
     .i_axis_ARESETn (i_axis_ARESETn ),
     .i_axis_TVALID  (i_axis_TVALID  ),
+    .o_axis_TREADY  (o_axis_TREADY  ),
     .i_axis_TDATA   (i_axis_TDATA   ),
     .o_axis_TVALID  (o_axis_TVALID  ),
     .o_axis_TDATA   (o_axis_TDATA   )
@@ -31,7 +33,7 @@ module sakebi_crc32_wrapper_tb;
 
 
   initial begin
-    #2
+    #1
     i_axis_TVALID   = 1'b1;
     i_axis_TDATA    = 8'h12;
     #2

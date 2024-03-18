@@ -5,6 +5,7 @@ module sakebi_crc32_wrapper #(
   input wire                        i_axis_ARESETn,
   // AXI-Stream Input Data
   input wire                        i_axis_TVALID,
+  output reg                        o_axis_TREADY,
   input wire    [DATA_WIDTH-1:0]    i_axis_TDATA,
   // AXI-Stream Output Data
   output reg                        o_axis_TVALID,
@@ -49,9 +50,11 @@ module sakebi_crc32_wrapper #(
       r_fifo        <= {DATA_WIDTH*5{1'b0}};
       o_axis_TDATA  <= {DATA_WIDTH*4{1'b0}};
       o_axis_TVALID <= 1'b0;
+      o_axis_TREADY <= 1'b1;
     end else begin
       case(r_crc_state)
         CRC_IDLE        : begin
+          o_axis_TREADY <= 1'b1;
           if(i_axis_TVALID) begin
             o_axis_TDATA    <= {DATA_WIDTH*4{1'b0}};
             o_axis_TVALID   <= 1'b0;
@@ -84,6 +87,7 @@ module sakebi_crc32_wrapper #(
             r_crc_state <= CRC_ZEROS;
             r_fifo      <= {w_crc, 8'h00};
             r_fifo_cnt  <= r_fifo_cnt + 8'h01;
+            o_axis_TREADY <= 1'b0;
           end
         end
         CRC_ZEROS       : begin
@@ -100,6 +104,7 @@ module sakebi_crc32_wrapper #(
           r_crc_state   <= CRC_IDLE;
           o_axis_TVALID <= 1'b1;
           o_axis_TDATA  <= ~output_reflector(w_crc);
+          o_axis_TREADY <= 1'b1;
         end
         default         : begin
           r_crc_state   <= CRC_IDLE;
