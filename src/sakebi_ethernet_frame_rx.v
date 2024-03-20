@@ -115,6 +115,7 @@ module sakebi_ethernet_frame_rx #(
           end
         end
         default         : begin
+          r_ether_state     <= ETHER_IDLE;
         end
       endcase
     end
